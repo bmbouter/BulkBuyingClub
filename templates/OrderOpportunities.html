@@ -1,0 +1,34 @@
+<html>
+<head><title>Order Opportunities</title></head>
+
+<body>
+
+<p>Welcome {{ user }},</p>
+
+<p>Below are the following weeks available for ordering:</p>
+
+{% if oo %}
+    <table border="1" cellpadding="10">
+    <tr>
+    <th>Order Delivery Date</th>
+    <th>Order Status</th>
+    </tr>
+    {% for order_opportunity in oo  %}
+        <tr>
+        <td>{{ order_opportunity.delivery_date  }}</td>
+        {% if order_opportunity.has_ordered_bool == 1 %}
+            <td><a href="{% url single-order-opportunity order_opportunity.pk %}">View my existing order</a></td>
+        {% else %}
+            {% if order_opportunity.has_ordered_bool == 0 %}
+                <td><a href="{% url single-order-opportunity order_opportunity.pk %}">Place a new order</a></td>
+            {% endif %}
+        {% endif %}
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    Sorry there are no ordering opportunities planned at this time
+{% endif %}
+
+</body>
+</html>

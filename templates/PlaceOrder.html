@@ -1,0 +1,34 @@
+<html>
+<head><title>Confirm Your Order</title></head>
+
+<body>
+
+{% load bulk_buying_club_extras %}
+
+{% if formset %}
+    <h3>Order Delivery Date: {{ order_opportunity.delivery_date }}</h3>
+
+    <form method="post" action="{% url single-order-opportunity order_opportunity.pk%}">
+        <table cellspacing="10">
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Product</th>
+        {% for form in formset.forms %}
+            <tr><td>{{ form.qty.errors }}{{ form.qty }}</td>
+            <td>{{ form.price|field_value|currency }}</td>{{ form.price.as_hidden }}
+            <td>{{ form.name|field_value }}</td>{{ form.name.as_hidden }}</tr>
+            <td>{{ form.product_pk.as_hidden }}</tr>
+        {% endfor %}
+        <tr><td>1</td><td>{{ order_opportunity.fuel_surcharge|currency }}</td><td>Fuel Surcharge</td></tr>
+        </table>
+        <p><b>{{ agreement.agreed.errors }}{{ agreement.agreed }}I agree to pick up the order on {{ order_opportunity.delivery_date }}.</b></p>
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <button type="submit">Place Order</button> 
+    </form>
+{% else %}
+    Sorry there is nothing to purhcase in this order
+{% endif %}
+
+</body>
+</html>

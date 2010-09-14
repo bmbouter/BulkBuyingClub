@@ -1,0 +1,34 @@
+<html>
+<head><title>Order Summary</title></head>
+
+<body>
+
+{% load bulk_buying_club_extras %}
+
+{% if formset %}
+    <p>For delivery on <b>{{ order_opportunity.delivery_date }}</b></p>
+
+    <form method="" action="">
+        <table cellspacing="10">
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Product</th>
+        {% for form in formset.forms %}
+            <tr><td>{{ form.qty|field_value }}</td>
+            <td>{{ form.price|field_value|currency }}</td>
+            <td>{{ form.name|field_value }}</td></tr>
+        {% endfor %}
+        <tr><td>1</td><td>{{ order_opportunity.fuel_surcharge|currency }}</td><td>Fuel Surcharge</td></tr>
+        </table>
+        {% csrf_token %}
+    </form>
+<hr>
+<p>Total: {{ total|currency }}</p>
+<p>If you have any problems with this order send an e-mail to <a href="mailto:katiecmagee@gmail.com">katiecmagee@gmail.com</a></p>
+<p>Go back to <a href="{% url order-opportunities %}">view other orders</a>.</p>
+{% else %}
+    <h3>You have an order for {{ order_opportunity.delivery.date }} but have no purchases for that order ... Strange</h3>
+{% endif %}
+
+</body>
+</html>
